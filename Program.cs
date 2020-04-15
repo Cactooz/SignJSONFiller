@@ -8,16 +8,11 @@ namespace SignJSONFiller
     {
         static void Main(string[] args)
         {
-            /*List<string> id = new List<string>();
-            List<string> name = new List<string>();
-            List<string> description = new List<string>();
-            List<string> image = new List<string>();
-            List<string> categories = new List<string>();*/
-            List<string> signs = new List<string>();
+            List<string> signItems = new List<string>();
 
             start:
 
-            Console.Write("Action (Add/Write/Exit/Error): ");
+            Console.Write("\nAction (Add/Write/Exit/Error): ");
             string answer = Console.ReadLine().ToLower();
 
             if (answer == "exit" || answer == "e" || answer == "esc")
@@ -25,17 +20,17 @@ namespace SignJSONFiller
                 Console.Write("Are you sure you want to exit? (Yes/No): ");
                 answer = Console.ReadLine().ToLower();
                 if (answer == "yes" || answer == "y")
-                    System.Environment.Exit(1);
+                    Environment.Exit(1);
                 else
                     goto start;
             }
             else if (answer == "write" || answer == "w")
             {
-                Write(signs);
+                Write(signItems);
                 Console.Write("Do you want to exit? (Yes/No): ");
                 answer = Console.ReadLine().ToLower();
                 if (answer == "yes" || answer == "y")
-                    System.Environment.Exit(2);
+                    Environment.Exit(2);
                 else
                     goto start;
             }
@@ -48,14 +43,14 @@ namespace SignJSONFiller
             }
             else
             {
-                Add(signs);
+                Add(signItems);
                 goto start;
             }
         }
 
         static void Add(List<string> signsList)
         {
-            Console.Write("ID: ");
+            Console.Write("\nID: ");
             signsList.Add(Console.ReadLine());
             Console.Write("Name: ");
             signsList.Add(Console.ReadLine());
@@ -76,11 +71,6 @@ namespace SignJSONFiller
                 outputFile.WriteLine("============");
                 outputFile.WriteLine($"Written: {DateTime.Now}");
                 outputFile.WriteLine("============");
-
-                /*foreach (string element in signsList)
-                {
-                    outputFile.WriteLine(element);
-                }*/
 
                 for (int i = 0; i < signsList.Count; i+=5)
                 {
