@@ -31,9 +31,15 @@ namespace SignJSONFiller
                     else
                         goto start;
                 }
-                else if (answer == "write" || answer == "w" || answer == "print")
+                else if (answer == "write" || answer == "w" || answer == "print" || answer == "p")
                 {
-                    Write();
+                    Console.Write("Are you sure you want to write (this will overwrite the existing file)? (Yes/No): ");
+                    answer = Console.ReadLine().ToLower();
+                    if (answer == "yes" || answer == "y")
+                        Write();
+                    else
+                        goto start;
+
                     Console.Write("Do you want to exit? (Yes/No): ");
                     answer = Console.ReadLine().ToLower();
                     if (answer == "yes" || answer == "y")
@@ -58,15 +64,15 @@ namespace SignJSONFiller
 
             public void Add()
             {
-                Console.Write("Id: ");
-                string id = Console.ReadLine();
+                Console.Write("ID: ");
+                string id = Console.ReadLine().ToUpper();
                 Console.Write("Name: ");
                 string name = Console.ReadLine();
                 Console.Write("Image: ");
-                string image = Console.ReadLine();
+                string image = Console.ReadLine().ToLower();
                 Console.Write("Description: ");
                 string description = Console.ReadLine();
-                Console.Write("Category: , ");
+                Console.Write("Category (Split with ,): ");
                 List<string> categories = new List<string>(Console.ReadLine().Split(','));
                 Sign sign = new Sign(id, name, image, description, categories);
                 signList.Add(sign);
