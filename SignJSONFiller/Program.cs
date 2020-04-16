@@ -16,8 +16,8 @@ namespace SignJSONFiller
 		}
 		class App
 		{
-			string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			string fileName = "Data.json";
+			private string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			private string fileName = "Data.json";
 			List<Sign> signList = new List<Sign>();
 
 			public void Start()
@@ -29,7 +29,7 @@ namespace SignJSONFiller
 			{
 				start:
 
-				Console.Write("\nAction (Add/Write/Load/Exit/Error/Help): ");
+				Console.Write("\nAction (Add/Write/Load/File/Path/Exit/Error/Help): ");
 				string answer = Console.ReadLine().ToLower();
 
 				if (answer == "exit" || answer == "e" || answer == "esc" || answer == "end")
@@ -69,6 +69,30 @@ namespace SignJSONFiller
 					else
 						goto start;
 				}
+				else if (answer == "file" || answer == "f" || answer == "filename" || answer == "fn")
+				{
+					Console.Write("Are you sure you want change file name? (Yes/No): ");
+					answer = Console.ReadLine().ToLower();
+					if (answer == "yes" || answer == "y")
+					{
+						ChangeFileName();
+						goto start;
+					}
+					else
+						goto start;
+				}
+				else if (answer == "path" || answer == "p" || answer == "filepath" || answer == "fp")
+				{
+					Console.Write("Are you sure you want change file path? (Yes/No): ");
+					answer = Console.ReadLine().ToLower();
+					if (answer == "yes" || answer == "y")
+					{
+						ChangeFilePath();
+						goto start;
+					}
+					else
+						goto start;
+				}
 				else if (answer == "error" || answer == "err")
 				{
 					Console.WriteLine("=== Exit codes ===");
@@ -81,12 +105,14 @@ namespace SignJSONFiller
 				else if (answer == "help" || answer == "h")
 				{
 					Console.WriteLine("=== Help ===");
-					Console.WriteLine("Add: add more signs (Alias: enter)");
-					Console.WriteLine("Write: write content to file (Alias: w, print, p)");
-					Console.WriteLine("Load: load content from file (Alias: l)");
-					Console.WriteLine("Exit: stop the program (NOTE: file wont be saved) (Alias: e,esc,end)");
-					Console.WriteLine("Error: exit codes (Alias: err)");
-					Console.WriteLine("Help: this command (Alias: h)");
+					Console.WriteLine("Add: add more signs (Command: enter)");
+					Console.WriteLine("Write: write content to file (Command: write, w, print, p)");
+					Console.WriteLine("Load: load content from file (Command: load, l)");
+					Console.WriteLine("File: Change JSON file save name (Command: file, f, filename, fn)");
+					Console.WriteLine("Path: Change JSON file save path (Command: path, filepath, fp)");
+					Console.WriteLine("Exit: stop the program (NOTE: file wont be saved) (Command: exit, e, esc, end)");
+					Console.WriteLine("Error: exit codes (Command: error, err)");
+					Console.WriteLine("Help: this command (Command: help, h)");
 
 					goto start;
 				}
@@ -150,7 +176,7 @@ namespace SignJSONFiller
 				Console.WriteLine($"File saved as {fileName} in your Documents folder");
 			}
 
-			public void Read()
+			private void Read()
 			{
 				try
 				{
@@ -161,6 +187,19 @@ namespace SignJSONFiller
 				{
 					Console.WriteLine(error.Message);
 				}
+			}
+
+			private void ChangeFileName()
+			{
+				Console.WriteLine($"Current file name {fileName}");
+				Console.Write("File name for JSON save file (include file ending): ");
+				fileName = Console.ReadLine();
+			}
+			private void ChangeFilePath()
+			{
+				Console.WriteLine($"Current file path {filePath}");
+				Console.Write("File path for JSON save file (don't include file name, full path needed, e.g. C:\\Docs\\JSONFolder)");
+				filePath = Console.ReadLine();
 			}
 		}
 
