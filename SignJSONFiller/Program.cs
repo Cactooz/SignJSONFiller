@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace SignJSONFiller
@@ -18,7 +19,13 @@ namespace SignJSONFiller
 			string filePath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 			string fileName = "Data.json";
 			List<Sign> signList = new List<Sign>();
+
 			public void Start()
+			{
+				Actions();
+			}
+
+			private void Actions()
 			{
 				start:
 
@@ -50,12 +57,15 @@ namespace SignJSONFiller
 					else
 						goto start;
 				}
-				else if(answer == "load" || answer == "l")
+				else if (answer == "load" || answer == "l")
 				{
 					Console.Write("Are you sure you want to load file? (Yes/No): ");
 					answer = Console.ReadLine().ToLower();
 					if (answer == "yes" || answer == "y")
+					{
 						Read();
+						goto start;
+					}
 					else
 						goto start;
 				}
@@ -85,26 +95,55 @@ namespace SignJSONFiller
 					Add();
 					goto start;
 				}
-				Console.Write(JsonConvert.SerializeObject(signList));
 			}
 
-			public void Add()
+			private void Add()
 			{
-				Console.Write("ID: ");
-				string id = Console.ReadLine().ToUpper();
-				Console.Write("Name: ");
-				string name = Console.ReadLine();
-				Console.Write("Image: ");
-				string image = Console.ReadLine().ToLower();
-				Console.Write("Description: ");
-				string description = Console.ReadLine();
-				Console.Write("Category (Split with ,): ");
-				List<string> categories = new List<string>(Console.ReadLine().Split(','));
+				string id = null, name = null, image = null, description = null;
+				List<string> categories = new List<string>();
+
+				while (string.IsNullOrEmpty(id))
+				{
+					Console.Write("ID: ");
+					id = Console.ReadLine().ToUpper();
+					if (string.IsNullOrEmpty(id))
+						Console.WriteLine("ID can't be empty");
+				}
+				while (string.IsNullOrEmpty(name))
+				{
+					Console.Write("Name: ");
+					name = Console.ReadLine();
+					if (string.IsNullOrEmpty(name))
+						Console.WriteLine("Name can't be empty");
+				}
+				while (string.IsNullOrEmpty(image))
+				{
+					Console.Write("Image name: ");
+					image = Console.ReadLine().ToLower();
+					if (string.IsNullOrEmpty(image))
+						Console.WriteLine("Image name can't be empty");
+				}
+				while (string.IsNullOrEmpty(description))
+				{
+					Console.Write("Description: ");
+					description = Console.ReadLine();
+					if (string.IsNullOrEmpty(description))
+						Console.WriteLine("Description can't be empty");
+				}
+				while (!categories.Any())
+				{
+					Console.Write("Category/Categories (Split with ,): ");
+					string[] categoriesArray = Console.ReadLine().Trim(' ').Split(',');
+					if (categoriesArray == null || categoriesArray.Length == 0 || categoriesArray[0] == "")
+						Console.WriteLine("Category/Categories can't be empty");
+					else
+						categories.AddRange(categoriesArray);
+				}
 				Sign sign = new Sign(id, name, image, description, categories);
 				signList.Add(sign);
 			}
-			
-			public void Write()
+
+			private void Write()
 			{
 				File.WriteAllText(Path.Combine(filePath, fileName), JsonConvert.SerializeObject(signList));
 
@@ -113,8 +152,15 @@ namespace SignJSONFiller
 
 			public void Read()
 			{
-				List<Sign> tempList = JsonConvert.DeserializeObject<List<Sign>>(File.ReadAllText(Path.Combine(filePath, fileName)));
-				signList.AddRange(tempList);
+				try
+				{
+					List<Sign> tempList = JsonConvert.DeserializeObject<List<Sign>>(File.ReadAllText(Path.Combine(filePath, fileName)));
+					signList.AddRange(tempList);
+				}
+				catch(Exception error)
+				{
+					Console.WriteLine(error.Message);
+				}
 			}
 		}
 
